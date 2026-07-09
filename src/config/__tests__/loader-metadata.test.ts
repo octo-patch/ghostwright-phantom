@@ -24,6 +24,7 @@ describe("loadConfig secret_source", () => {
 		"ANTHROPIC_AUTH_TOKEN",
 		"OPENAI_API_KEY",
 		"ZAI_API_KEY",
+		"MINIMAX_API_KEY",
 		"OPENROUTER_API_KEY",
 		"LITELLM_KEY",
 	] as const;
@@ -32,6 +33,7 @@ describe("loadConfig secret_source", () => {
 		ANTHROPIC_AUTH_TOKEN: undefined,
 		OPENAI_API_KEY: undefined,
 		ZAI_API_KEY: undefined,
+		MINIMAX_API_KEY: undefined,
 		OPENROUTER_API_KEY: undefined,
 		LITELLM_KEY: undefined,
 	};
@@ -147,6 +149,37 @@ provider:
 		expect(process.env.ANTHROPIC_API_KEY).toBeUndefined();
 		expect(process.env.ANTHROPIC_AUTH_TOKEN).toBeUndefined();
 		expect(process.env.OPENAI_API_KEY).toBeUndefined();
+	});
+
+	test("secret_source: metadata with Murph MiniMax populates only MINIMAX_API_KEY", async () => {
+		const stubBody = "minimax-provider-token";
+		globalThis.fetch = mock((url: string | Request) => {
+			expect(String(url)).toBe("http://gateway.test/v1/secrets/provider_token");
+			return Promise.resolve(
+				new Response(stubBody, {
+					status: 200,
+					headers: { "X-Phantom-Rotation-Id": "1" },
+				}),
+			);
+		}) as unknown as typeof fetch;
+
+		const path = writeYaml(
+			"metadata-murph-minimax.yaml",
+			`
+name: metadata-minimax
+agent_runtime: murph
+secret_source: metadata
+secret_source_url: http://gateway.test
+provider:
+  type: minimax
+`,
+		);
+		await loadConfig(path);
+		expect(process.env.MINIMAX_API_KEY).toBe(stubBody);
+		expect(process.env.ANTHROPIC_API_KEY).toBeUndefined();
+		expect(process.env.ANTHROPIC_AUTH_TOKEN).toBeUndefined();
+		expect(process.env.OPENAI_API_KEY).toBeUndefined();
+		expect(process.env.ZAI_API_KEY).toBeUndefined();
 	});
 
 	test("secret_source: metadata resolves whole-string ${secret:NAME} references in nested config", async () => {

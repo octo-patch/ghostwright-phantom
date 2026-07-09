@@ -29,6 +29,7 @@ const WATCHED = [
 	"ANTHROPIC_BASE_URL",
 	"OPENAI_API_KEY",
 	"ZAI_API_KEY",
+	"MINIMAX_API_KEY",
 	"OPENROUTER_API_KEY",
 	"LITELLM_KEY",
 	"MURPH_PROVIDER",
@@ -69,7 +70,7 @@ describe("ProviderSchema", () => {
 	});
 
 	test("accepts each valid provider type", () => {
-		for (const type of ["anthropic", "openai", "zai", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
+		for (const type of ["anthropic", "openai", "zai", "minimax", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
 			const parsed = ProviderSchema.parse({ type });
 			expect(parsed.type).toBe(type);
 		}
@@ -316,6 +317,24 @@ describe("buildAgentRuntimeEnv: Murph runtime", () => {
 		expect(env.ANTHROPIC_API_KEY).toBe("");
 	});
 
+	test("emits MiniMax route env", () => {
+		process.env.MINIMAX_API_KEY = "minimax-secret";
+		const config = makeConfig(
+			{ type: "minimax", model_mappings: { sonnet: "MiniMax-M3" } },
+			{ agent_runtime: "murph", model: "sonnet" },
+		);
+		const model = resolveAgentRuntimeModel(config, config.model);
+		const env = buildAgentRuntimeEnv(config, model);
+
+		expect(model).toBe("MiniMax-M3");
+		expect(env.MURPH_PROVIDER).toBe("openai-compat");
+		expect(env.MURPH_PROVIDER_CONFIG).toBe("minimax");
+		expect(env.MURPH_MODEL).toBe("MiniMax-M3");
+		expect(env.OPENAI_BASE_URL).toBe("https://api.minimax.io/v1");
+		expect(env.MINIMAX_API_KEY).toBe("minimax-secret");
+		expect(env.OPENAI_API_KEY).toBe("");
+	});
+
 	test("emits OpenRouter route env", () => {
 		process.env.OPENROUTER_API_KEY = "openrouter-secret";
 		const config = makeConfig(
@@ -378,7 +397,7 @@ describe("buildAgentRuntimeEnv: Murph runtime", () => {
 
 describe("PROVIDER_PRESETS", () => {
 	test("contains every provider type declared in the schema", () => {
-		for (const type of ["anthropic", "openai", "zai", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
+		for (const type of ["anthropic", "openai", "zai", "minimax", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
 			expect(PROVIDER_PRESETS[type]).toBeDefined();
 		}
 	});
@@ -389,7 +408,7 @@ describe("PROVIDER_PRESETS", () => {
 	});
 
 	test("every non-anthropic Anthropic-compatible preset disables betas by default", () => {
-		for (const type of ["zai", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
+		for (const type of ["zai", "minimax", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
 			expect(PROVIDER_PRESETS[type].disable_betas).toBe(true);
 		}
 	});

@@ -24,7 +24,7 @@ timeout_minutes: 240
 # the chosen provider; authentication happens at the env var named below.
 #
 # provider:
-#   type: anthropic            # anthropic | zai | openrouter | vllm | ollama | litellm | custom
+#   type: anthropic            # anthropic | zai | minimax | openrouter | vllm | ollama | litellm | custom
 #   # api_key_env: ANTHROPIC_API_KEY
 #
 # Example: GLM-5.1 via Z.AI's Anthropic-compatible API (15x cheaper than Opus)
