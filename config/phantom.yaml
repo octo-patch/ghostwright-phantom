@@ -36,6 +36,15 @@ timeout_minutes: 240
 #     sonnet: glm-5.1
 #     haiku: glm-4.5-air
 #
+# Example: MiniMax with the two current text models
+# provider:
+#   type: minimax
+#   api_key_env: MINIMAX_API_KEY
+#   model_mappings:
+#     opus: MiniMax-M3
+#     sonnet: MiniMax-M3
+#     haiku: MiniMax-M2.7
+#
 # Example: Murph runtime with OpenAI. Requires @murph/anthropic-sdk-shim to be
 # installed or linked into this Phantom project.
 # agent_runtime: murph

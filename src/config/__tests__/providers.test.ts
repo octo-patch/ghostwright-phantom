@@ -70,7 +70,17 @@ describe("ProviderSchema", () => {
 	});
 
 	test("accepts each valid provider type", () => {
-		for (const type of ["anthropic", "openai", "zai", "minimax", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
+		for (const type of [
+			"anthropic",
+			"openai",
+			"zai",
+			"minimax",
+			"openrouter",
+			"vllm",
+			"ollama",
+			"litellm",
+			"custom",
+		] as const) {
 			const parsed = ProviderSchema.parse({ type });
 			expect(parsed.type).toBe(type);
 		}
@@ -171,6 +181,24 @@ describe("buildProviderEnv: zai preset", () => {
 		expect(env.ANTHROPIC_BASE_URL).toBe("https://api.z.ai/api/anthropic");
 		expect(env.ANTHROPIC_AUTH_TOKEN).toBeUndefined();
 		expect(env.ANTHROPIC_API_KEY).toBeUndefined();
+	});
+});
+
+describe("buildProviderEnv: MiniMax preset", () => {
+	test("sets the SDK base URL, credentials, model mappings, and disables betas", () => {
+		process.env.MINIMAX_API_KEY = "minimax-secret";
+		const config = makeConfig({
+			type: "minimax",
+			model_mappings: { sonnet: "MiniMax-M3", haiku: "MiniMax-M2.7" },
+		});
+		const env = buildProviderEnv(config);
+
+		expect(env.ANTHROPIC_BASE_URL).toBe("https://api.minimax.io/anthropic");
+		expect(env.ANTHROPIC_AUTH_TOKEN).toBe("minimax-secret");
+		expect(env.ANTHROPIC_API_KEY).toBe("minimax-secret");
+		expect(env.ANTHROPIC_DEFAULT_SONNET_MODEL).toBe("MiniMax-M3");
+		expect(env.ANTHROPIC_DEFAULT_HAIKU_MODEL).toBe("MiniMax-M2.7");
+		expect(env.CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS).toBe("1");
 	});
 });
 
@@ -397,7 +425,17 @@ describe("buildAgentRuntimeEnv: Murph runtime", () => {
 
 describe("PROVIDER_PRESETS", () => {
 	test("contains every provider type declared in the schema", () => {
-		for (const type of ["anthropic", "openai", "zai", "minimax", "openrouter", "vllm", "ollama", "litellm", "custom"] as const) {
+		for (const type of [
+			"anthropic",
+			"openai",
+			"zai",
+			"minimax",
+			"openrouter",
+			"vllm",
+			"ollama",
+			"litellm",
+			"custom",
+		] as const) {
 			expect(PROVIDER_PRESETS[type]).toBeDefined();
 		}
 	});

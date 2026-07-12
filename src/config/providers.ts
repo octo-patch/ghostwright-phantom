@@ -88,7 +88,7 @@ export const PROVIDER_PRESETS: Readonly<Record<ProviderType, ProviderPreset>> = 
 		disable_betas: true,
 	},
 	minimax: {
-		base_url: "https://api.minimax.io/anthropic/v1",
+		base_url: "https://api.minimax.io/anthropic",
 		api_key_env: "MINIMAX_API_KEY",
 		disable_betas: true,
 	},
