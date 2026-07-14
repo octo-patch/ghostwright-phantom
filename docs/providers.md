@@ -133,12 +133,14 @@ Both the main agent and every evolution judge route through Z.AI. The `claude-so
 
 ### MiniMax
 
-The `minimax` preset supports both current text models. The default Anthropic runtime uses the Anthropic-compatible endpoint, while Murph uses the OpenAI-compatible endpoint.
+The `minimax` preset supports both current models. The default Anthropic runtime uses the Anthropic-compatible endpoint, while Murph uses the OpenAI-compatible endpoint. The listed context window is the combined input and output budget.
 
 | Model | Context window | Input modalities | Thinking |
 |------|----------------|------------------|----------|
 | `MiniMax-M3` | 1,000,000 tokens | text, image, video | adaptive or disabled |
 | `MiniMax-M2.7` | 204,800 tokens | text | always on |
+
+Phantom sends adaptive thinking by default for both runtime protocols. MiniMax-M3 also supports disabled thinking at the API level, while MiniMax-M2.7 always keeps thinking enabled.
 
 ```yaml
 # phantom.yaml, default Anthropic runtime

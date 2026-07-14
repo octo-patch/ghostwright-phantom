@@ -26,6 +26,11 @@ describe("getThinkingConfig", () => {
 		expect(getThinkingConfig("claude-mythos-preview")).toEqual({ type: "adaptive" });
 	});
 
+	test("MiniMax models use the adaptive request shape", () => {
+		expect(getThinkingConfig("MiniMax-M3")).toEqual({ type: "adaptive" });
+		expect(getThinkingConfig("MiniMax-M2.7")).toEqual({ type: "adaptive" });
+	});
+
 	test("Haiku 4.5 returns enabled + budgetTokens (Haiku rejects adaptive with 400)", () => {
 		const config = getThinkingConfig(JUDGE_MODEL_HAIKU);
 		expect(config.type).toBe("enabled");
