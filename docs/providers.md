@@ -178,15 +178,12 @@ provider:
   type: minimax
 ```
 
-Pay-as-you-go prices are in USD per million tokens. MiniMax-M3 pricing depends on both the service tier and input length, so each tier is listed separately.
+Pay-as-you-go prices are in USD per million tokens.
 
-| Model / service tier | Input length | Input | Output | Cache read | Cache write |
-|----------------------|--------------|-------|--------|------------|-------------|
-| `MiniMax-M3` standard | up to 512k | $0.30 | $1.20 | $0.06 | n/a |
-| `MiniMax-M3` standard | over 512k | $0.60 | $2.40 | $0.12 | n/a |
-| `MiniMax-M3` priority | up to 512k | $0.45 | $1.80 | $0.09 | n/a |
-| `MiniMax-M3` priority | over 512k | $0.90 | $3.60 | $0.18 | n/a |
-| `MiniMax-M2.7` | all requests | $0.30 | $1.20 | $0.06 | $0.375 |
+| Model | Input | Output | Cache read | Cache write |
+|-------|-------|--------|------------|-------------|
+| `MiniMax-M3` | $0.60 | $2.40 | $0.12 | n/a |
+| `MiniMax-M2.7` | $0.30 | $1.20 | $0.06 | $0.375 |
 
 See the [MiniMax Anthropic API documentation](https://platform.minimax.io/docs/api-reference/text-anthropic-api) and [current pricing](https://platform.minimax.io/docs/guides/pricing-paygo) for API details.
 
