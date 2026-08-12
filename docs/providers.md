@@ -140,7 +140,7 @@ The `minimax` preset supports both current models. The default Anthropic runtime
 | `MiniMax-M3` | 1,000,000 tokens | text, image, video | adaptive or disabled |
 | `MiniMax-M2.7` | 204,800 tokens | text | always on |
 
-Phantom sends adaptive thinking by default for both runtime protocols. MiniMax-M3 also supports disabled thinking at the API level, while MiniMax-M2.7 always keeps thinking enabled.
+Phantom sends adaptive thinking for MiniMax-M3 by default. MiniMax-M3 also supports disabled thinking at the API level, while MiniMax-M2.7 always keeps thinking enabled.
 
 ```yaml
 # phantom.yaml, default Anthropic runtime
